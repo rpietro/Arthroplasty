@@ -27,7 +27,16 @@ library("car")
 #####################################################################################
 
 #if you are using a file that is local to your computer, then replace path below with path to the data file in your computer. command will send all the data into the templateData object. replace the word template.data by a name that might easier for you to remember and that represents your data. If you don't know where to get the path to your file, please watch http://goo.gl/i0cPh
-templateData <- read.csv("/Users/rpietro/Google Drive/R/nonpublicdata_publications/arthroplasty/arthroplasty.csv", header = TRUE, sep = ";", dec=",")
+
+# Pietro's machine
+#db_dir = "/Users/rpietro/Google Drive/R/nonpublicdata_publications/arthroplasty/"
+
+# Jacson's machine
+db_dir = "/Users/Administrator/Documents/Projects/Data/Arthroplasty/"
+
+db_name = "arthroplasty.csv"
+
+templateData <- read.csv( paste(db_dir , db_name , sep ="") , header = TRUE, sep = ";", dec=",")
 
 #below will view data in a spreadsheet format. notice that in this all subsequent commands you have to replace templateData with whatever name you chose for your data object in the previous command
 
@@ -50,8 +59,8 @@ new.var  <- car::recode(old.var, " 1:2 = 'A'; 3 = 'C'; '' = NA; else = 'B' ")
 #describes your entire dataset
 describe(templateData)
 
-summary(variable)
-qplot(variable)
+summary(templateData$IDADE)
+qplot(templateData$IDADE)
 
 #t.test, where outcome is a continuous variable and predictor is a dichotomous variable
 t.test(outcome~predictor)
@@ -83,5 +92,28 @@ plot(prop.assump1)  #plot curves -- from the help page: "If the proportional haz
 summary(survivalmodel1)
 
 #######################################################################################
-#template_secondary_data_analysis.R is licensed under a Creative Commons Attribution - Non commercial 3.0 Unported License. You are free: to Share — to copy, distribute and transmit the work to Remix — to adapt the work, under the following conditions: Attribution — You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work). Noncommercial — You may not use this work for commercial purposes. With the understanding that: Waiver — Any of the above conditions can be waived if you get permission from the copyright holder. Public Domain — Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license. Other Rights — In no way are any of the following rights affected by the license: Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations; The author's moral rights; Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights. Notice — For any reuse or distribution, you must make clear to others the license terms of this work. The best way to do this is with a link to this web page. For more details see http://creativecommons.org/licenses/by-nc/3.0/
+# My issues
 #######################################################################################
+
+## Criando um subset baseado no filtro do grupo e a primeira linha da internacao 
+
+# There are 2 ways
+
+# 1.Logical 
+ # aih<-subset(templateData, (grupo=="Revisado" || grupo =="1CirurgiaAtual" ) & ID_SERVICO ==1)
+
+# 2.Using Clausule 'in'
+aih<-subset(templateData, grupo %in% c("Revisado" , "1CirurgiaAtual" ) & ID_SERVICO ==1)
+
+qplot(droplevels(aih)$grupo)
+
+aih_faixa<-data.frame(grupo=aih$grupo, faixa=cut(aih$IDADE, breaks=c(1,20,40,60,70,300), labels=c("1-20","20-40","40-60","60-70",">70"), right=TRUE) )
+
+table(aih_faixa)
+
+## Comparando a frequencia por faixa etaria
+qplot(faixa, data=aih_faixa, geom="freqpoly", group=grupo, colour=grupo, position="identity")
+
+
+levels( aih_faixa$grupo )
+
