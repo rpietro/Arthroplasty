@@ -22,6 +22,7 @@ detach()
 #command below will install each package. if you run this script from the beginning you need to run every single one again
 library("ggplot2")
 library("car")
+library("RMySQL")
 #####################################################################################
 #IMPORTING DATA AND RECODING
 #####################################################################################
@@ -32,11 +33,25 @@ library("car")
 #db_dir = "/Users/rpietro/Google Drive/R/nonpublicdata_publications/arthroplasty/"
 
 # Jacson's machine
-db_dir = "/Users/Administrator/Documents/Projects/Data/Arthroplasty/"
+#db_dir = "/Users/Administrator/Documents/Projects/Data/Arthroplasty/"
 
-db_name = "arthroplasty.csv"
+#db_name = "arthroplasty.csv"
 
-templateData <- read.csv( paste(db_dir , db_name , sep ="") , header = TRUE, sep = ";", dec=",")
+#templateData <- read.csv( paste(db_dir , db_name , sep ="") , header = TRUE, sep = ";", dec=",")
+
+######### if you are using MYSQL DATA BASE
+
+# 1. Create a Connection
+
+con <- dbConnect(MySQL(), user="tiedu_1", password="saopaulo12", dbname="tiedu_1", host="dbmy0059.whservidor.com")
+
+dbListTables(con)
+
+#Import and export data.frames:
+
+templateData <- dbReadTable(con, "arthroplasty")
+
+dbDisconnect(con)
 
 #below will view data in a spreadsheet format. notice that in this all subsequent commands you have to replace templateData with whatever name you chose for your data object in the previous command
 
@@ -116,4 +131,7 @@ qplot(faixa, data=aih_faixa, geom="freqpoly", group=grupo, colour=grupo, positio
 
 
 levels( aih_faixa$grupo )
+
+
+#---
 
