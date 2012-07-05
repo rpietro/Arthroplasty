@@ -28,6 +28,7 @@ library("RMySQL")
 #####################################################################################
 
 #if you are using a file that is local to your computer, then replace path below with path to the data file in your computer. command will send all the data into the templateData object. replace the word template.data by a name that might easier for you to remember and that represents your data. If you don't know where to get the path to your file, please watch http://goo.gl/i0cPh
+<<<<<<< HEAD
 
 # Pietro's machine
 #db_dir = "/Users/rpietro/Google Drive/R/nonpublicdata_publications/arthroplasty/"
@@ -52,6 +53,9 @@ dbListTables(con)
 templateData <- dbReadTable(con, "arthroplasty")
 
 dbDisconnect(con)
+=======
+templateData <- read.csv("/Users/rpietro/Google Drive/R/nonpublicdata_publications/templateData.csv")
+>>>>>>> just some additions
 
 #below will view data in a spreadsheet format. notice that in this all subsequent commands you have to replace templateData with whatever name you chose for your data object in the previous command
 
