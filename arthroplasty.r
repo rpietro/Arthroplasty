@@ -27,7 +27,9 @@ dbListTables(con)
 
 #Import and export data.frames:
 
-templateData <- dbReadTable(con, "arthroplasty")
+strSql <- "select c.descrabrev , a.* from arthroplasty a , cid_10 c where substring(a.cd_cid,1,3) = c.cat"
+
+templateData <- dbGetQuery(con, strSql)
 
 dbDisconnect(con)
 
@@ -60,7 +62,6 @@ table(aih_faixa)
 
 ## Comparando a frequencia por faixa etaria
 qplot(faixa, data=aih_faixa, geom="freqpoly", group=grupo, colour=grupo, position="identity")
-
 
 levels( aih_faixa$grupo )
 
