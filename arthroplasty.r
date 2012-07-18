@@ -27,7 +27,7 @@ dbListTables(con)
 
 #Import and export data.frames:
 
-strSql <- "select c.descrabrev , a.* from arthroplasty a , cid_10 c where substring(a.cd_cid,1,3) = c.cat"
+strSql <- "select c.descrabrev , a.* from arthroplasty a , cid_10 c where substring(a.cd_cid,1,3) = c.cat and id_servico = 1 and (grupo = 'Revisado' or grupo = '1CirurgiaAtual') "
 
 templateData <- dbGetQuery(con, strSql)
 
@@ -52,11 +52,11 @@ attach(templateData)
  # aih<-subset(templateData, (grupo=="Revisado" || grupo =="1CirurgiaAtual" ) & ID_SERVICO ==1)
 
 # 2.Using Clausule 'in'
-aih<-subset(templateData, grupo %in% c("Revisado" , "1CirurgiaAtual" ) & id_servico ==1)
+#aih<-subset(templateData, grupo %in% c("Revisado" , "1CirurgiaAtual" ) & id_servico ==1)
 
-qplot(droplevels(aih)$grupo)
+qplot(droplevels(templateData)$grupo)
 
-aih_faixa<-data.frame(grupo=aih$grupo, faixa=cut(aih$IDADE, breaks=c(1,20,40,60,70,300), labels=c("1-20","20-40","40-60","60-70",">70"), right=TRUE) )
+aih_faixa<-data.frame(grupo=templateData$grupo, faixa=cut(templateData$IDADE, breaks=c(1,20,40,60,70,300), labels=c("1-20","20-40","40-60","60-70",">70"), right=TRUE) )
 
 table(aih_faixa)
 
